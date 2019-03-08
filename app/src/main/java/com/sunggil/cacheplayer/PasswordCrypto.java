@@ -6,6 +6,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
@@ -17,33 +18,33 @@ public class PasswordCrypto {
 	public static final String TAG = "PasswordCrypto";
 	
     public static String encrypt(String seed, String cleartext) throws Exception {
-        byte[] rawKey = getRawKey(seed.getBytes());
+        byte[] rawKey = generateKey(seed.getBytes());
         byte[] result = encrypt(rawKey, cleartext.getBytes());
         return toHex(result);
     }
     
     public static String decrypt(String seed, String encrypted) throws Exception {
-        byte[] rawKey = getRawKey(seed.getBytes());
+        byte[] rawKey = generateKey(seed.getBytes());
         byte[] enc = toByte(encrypted);
         byte[] result = decrypt(rawKey, enc);
         return new String(result);
     }
 
     public static boolean encrypt(String seed, File file) throws Exception {
-        byte[] rawKey = getRawKey(seed.getBytes());
+        byte[] rawKey = generateKey(seed.getBytes());
         byte[] result = encrypt(rawKey, toByte(file));
         toFile(result, file.getAbsolutePath());
         return true;
     }
     
     public static byte[] decrypt(String seed, File file) throws Exception {
-        byte[] rawKey = getRawKey(seed.getBytes());
+        byte[] rawKey = generateKey(seed.getBytes());
         byte[] result = decrypt(rawKey, toByte(file));
         return result;
     }
     
     public static boolean decryptToFile(String seed, String fromPath, String toPath, String fileName) throws Exception {
-        byte[] rawKey = getRawKey(seed.getBytes());
+        byte[] rawKey = generateKey(seed.getBytes());
         byte[] decByte = decrypt(rawKey, pathToByte(fromPath + fileName));
         File file = toFile(decByte, toPath + fileName);
         
@@ -54,14 +55,28 @@ public class PasswordCrypto {
         }
     }
 
-	private static byte[] getRawKey(byte[] seed) throws Exception {
-        KeyGenerator kgen = KeyGenerator.getInstance("AES");
-//        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "Crypto");
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-        sr.setSeed(seed);
-        kgen.init(128, sr); // 192 and 256 bits may not be available
-        SecretKey skey = kgen.generateKey();
-        byte[] raw = skey.getEncoded();
+//	private static byte[] getRawKey(byte[] seed) throws Exception {
+//        KeyGenerator kgen = KeyGenerator.getInstance("AES");
+////        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "Crypto");
+//        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+//        sr.setSeed(seed);
+//        kgen.init(128, sr); // 192 and 256 bits may not be available
+//        SecretKey skey = kgen.generateKey();
+//        byte[] raw = skey.getEncoded();
+//        return raw;
+//    }
+
+    public static byte[] generateKey(byte[] seed) throws NoSuchAlgorithmException {
+        // Generate a 128-bit key
+        final int outputKeyLength = 128;
+
+        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.setSeed(seed);
+        // Do *not* seed secureRandom! Automatically seeded from system entropy.
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+        keyGenerator.init(outputKeyLength, secureRandom);
+        SecretKey key = keyGenerator.generateKey();
+        byte[] raw = key.getEncoded();
         return raw;
     }
 

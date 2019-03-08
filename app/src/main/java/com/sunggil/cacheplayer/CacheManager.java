@@ -1196,11 +1196,13 @@ class CacheManager {
 
                     List<CacheFileData> list = cacheFileHash.get(cache.getType());
 
-                    for (CacheFileData data : list) {
-                        if (fileName.equals(data.getFileName())) {
-                            isExists = true;
-                        } else {
-                            data.count();
+                    if (list.size() > 0) {
+                        for (CacheFileData data : list) {
+                            if (fileName.equals(data.getFileName())) {
+                                isExists = true;
+                            } else {
+                                data.count();
+                            }
                         }
                     }
 
