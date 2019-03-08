@@ -1196,7 +1196,7 @@ class CacheManager {
 
                     List<CacheFileData> list = cacheFileHash.get(cache.getType());
 
-                    if (list.size() > 0) {
+                    if (list != null && list.size() > 0) {
                         for (CacheFileData data : list) {
                             if (fileName.equals(data.getFileName())) {
                                 isExists = true;
