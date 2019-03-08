@@ -76,26 +76,11 @@ public class CachePlayer {
     private final int STREAMING_BUFFER_BLOCK = 3 * 1024 * 1024;
     private final int STREAMING_BUFFER_REQUEST_BLOCK = 2 * 1024 * 1024;
 
-    public static final String CACHE_FUNCTIONS = "cache_functions";
-    public static final String CACHE_FOLDER_ROOT_NAME = "cache_folder_root_name";
-    public static final String CACHE_FOLDER_FUNCTION_NAME = "cache_folder_function_name";
-
     public CachePlayer(Context context, String authKey, String packageName, CachePlayerCallback callback, HashMap<String, CacheFunctionParam> param) {
         this.mContext = context;
         this.mPackageName = packageName;
         this.mPlayerCallback = callback;
         printNetworkUsage(context);
-
-        //sample
-        param = new HashMap<>();
-
-        CacheFunctionParam cfp1 = new CacheFunctionParam("Melon","T2C3/cache", ".melon", CacheInfo.PLAY_MODE_SINGLE_FILE);
-        CacheFunctionParam cfp2 = new CacheFunctionParam("News","T2C3/cache",".news", CacheInfo.PLAY_MODE_SINGLE_FILE);
-        CacheFunctionParam cfp3 = new CacheFunctionParam("Podbbang","T2C3/cache",".podbbang", CacheInfo.PLAY_MODE_DIVIDE_FILE);
-        param.put(cfp1.getPlayerType(), cfp1);
-        param.put(cfp2.getPlayerType(), cfp2);
-        param.put(cfp3.getPlayerType(), cfp3);
-        //sample
 
         if (cacheManager == null) {
             cacheManager = new CacheManager(mContext, authKey, managerCallback, param);

@@ -36,12 +36,6 @@ class CacheManager {
 
     private final String SEED_KEY = "CACHE_CRYPTO_KEY";
 
-    private HashMap<String, CacheFunctionParam> mPlayerType = null;
-
-//    public static final int CACHE_TYPE_MELON = 0;
-//    public static final int CACHE_TYPE_NEWS = 1;
-//    public static final int CACHE_TYPE_PODCAST = 2;
-
     private final int CACHE_MEM_MAX_LIMIT_SINGLE = 250 * 1024 * 1024;
     private final int CACHE_MEM_MAX_LIMIT_DIVIDE = 50 * 1024 * 1024;
 
